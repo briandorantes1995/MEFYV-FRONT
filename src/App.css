@@ -1,38 +1,104 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Home Section */
+.home {
   display: flex;
-  flex-direction: column;
+  height: 90vh;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 3rem;
+  background-image: url("./logo.jpg");
+  position: relative;
+  z-index: 1; /* Asegura que el home esté por debajo del menú lateral */
 }
 
-.App-link {
-  color: #61dafb;
+.home-trans {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  background-color: rgba(255, 255, 255, 0.8); 
+  z-index: 1; /* Asegura que el fondo traslúcido esté por debajo del menú lateral */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Navbar CSS */
+.navbar {
+  background-color: #857ceb;
+  height: 80px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 2; /* Coloca la navbar por encima del fondo traslúcido */
 }
+
+.menu-bars {
+  margin-left: 2rem;
+  font-size: 2rem;
+  background: none;
+  color: #000;
+}
+
+.nav-menu {
+  background-color: #857ceb;
+  width: 250px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: -100%; /* Escondido inicialmente */
+  transition: 850ms;
+  z-index: 3; /* Asegura que el menú esté por encima de todo */
+}
+
+.nav-menu.active {
+  left: 0;
+  transition: 450ms;
+}
+
+.nav-text {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 8px 0px 8px 16px;
+  list-style: none;
+  height: 60px;
+}
+
+.nav-text a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+  width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 4px;
+}
+
+.nav-text a:hover {
+  background-color: #46179c;
+  color: #fff;
+}
+
+.nav-menu-items {
+  width: 100%;
+}
+
+.navbar-toggle {
+  background-color: #857ceb;
+  width: 80%;
+  height: 80px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+span {
+  margin-left: 16px;
+}
+

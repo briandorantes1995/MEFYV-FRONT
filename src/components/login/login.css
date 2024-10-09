@@ -1,0 +1,21 @@
+h1, .h1{
+    color: #2a70e0 !important;
+}
+
+.t{
+    color: rgb(15, 15, 128) !important;
+    font-size: 25px;
+}
+
+.jc-center{
+    justify-content: center !important;
+}
+
+.ai{
+    align-items: center !important;
+}
+
+.d-flex.tv {
+    display: flex;
+    justify-content: space-evenly;
+}
