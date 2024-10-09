@@ -17,7 +17,7 @@ export const NavbarData = [
     cName: "nav-text",
   },
   {
-    title: "Remsiones",
+    title: "Remisiones",
     path: "/crearRemisiones",
     cName: "nav-text",
   },

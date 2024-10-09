@@ -43,7 +43,7 @@ function Login() {
 
                             <div className='d-flex flex-row mt-3 jc-center'>
                                 <MDBIcon fas icon="cubes fa-3x me-3" style={{ color: '#ff6219' }}/>
-                                <span className="h1 fw-bold">TalenTrack</span>
+                                <span className="h1 fw-bold">MEFYV</span>
                             </div>
 
                             <h5 className="fw-bolder my-4 t" style={{letterSpacing: '1px'}}>¡Bienvenid@ nuevamente!</h5>

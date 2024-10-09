@@ -4,8 +4,8 @@ async function loginEmail(email, password,seleccion) {
         baseURL = baseURL+"usuarios/login"
     try {
         const response = await axios.post(baseURL, {
-            email: email,
-            password: password
+            correo: email,
+            contra: password
         });
         if(response){
             return response.data;
