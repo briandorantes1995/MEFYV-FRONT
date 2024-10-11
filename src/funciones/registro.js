@@ -1,18 +1,18 @@
 import axios from "axios";
-let baseURL =process.env.REACT_APP_BACKEND_URL;
-async function registro(name, email, password,seleccion) {
-        baseURL = baseURL+"usuarios/registro"
+let baseURL =process.env.REACT_APP_BACKEND_URL+"usuario/registro";
+async function registroUsuario(name, email, password) {
     try {
-        console.log(baseURL);
         const response = await axios.post(baseURL, {
             nombre: name,
             correo: email,
-            contra: password
+            contrasena: password
         });
-        return response.data;
+        return response.data;  // On success, return the response
     } catch (error) {
-        console.log('Error en el registro:', error);
+        console.error('Error en el registro:', error);
+        throw error;  // Throw the error so that it can be caught in onSubmit
     }
 }
 
-export default registro;
+
+export default registroUsuario;

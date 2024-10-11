@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Form, Formik} from 'formik';
 import {Link, useNavigate} from "react-router-dom";
-import registro from '../../funciones/registro';
+import registroUsuario from "../../funciones/registro";
 import {registroSchema} from '../Validation/Schema';
 import {MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCol, MDBContainer, MDBIcon,MDBRow} from 'mdb-react-ui-kit';
 import CustomInput from '../Validation/customInput';
@@ -12,19 +12,18 @@ function Registro() {
     }, [navigate]);
 
     const onSubmit = async (values, actions) => {
-        try{
-            const cuenta = await registro(values.name, values.email, values.password,values.seleccion);
-            if(cuenta){
-                navigate('/');
+        try {
+            const cuenta = await registroUsuario(values.name, values.email, values.password);
+            if (cuenta) {
+                navigate('/login');
             }
             actions.resetForm();
-        }catch (error){
-            actions.resetForm();
-            console.log(error);
+        } catch (error) {
+            console.log("Error:", error.response?.data || error.message);
+            actions.setSubmitting(false); // Stop the submission state
+            actions.setErrors({ server: 'Error al registrar. Por favor intente de nuevo.' });
         }
-    }
-
-
+    };
 
     return (
         <div className="fill-window">
@@ -45,7 +44,7 @@ function Registro() {
                             <h5 className="fw-bolder my-4 t" style={{letterSpacing: '1px'}}>¡Bienvenid@!</h5>
                             <p>Ingresa tus datos para el registro</p>
                             <Formik
-                                initialValues={{ name: "",email:"",password: "",confirmPassword: "",seleccion: ""}}
+                                initialValues={{ name: "",email:"",password: "",confirmPassword: ""}}
                                 validationSchema={registroSchema}
                                 onSubmit={onSubmit}>
                                 {({ isSubmitting }) => (

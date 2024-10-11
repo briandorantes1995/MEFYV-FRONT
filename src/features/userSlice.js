@@ -3,7 +3,7 @@ import {decodeToken} from "react-jwt";
 
 
 const initialState = {
-    value: {},
+    value: "",
 }
 
 export const userSlice = createSlice({
@@ -11,7 +11,7 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         destroy: (state) => {
-            state.value =  {}
+            state.value =  ""
         },
         set: (state, action) => {
             state.value = decodeToken(action.payload)
