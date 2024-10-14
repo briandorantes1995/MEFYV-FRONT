@@ -6,8 +6,6 @@ import { facturaSchema } from '../Validation/Schema';
 import CustomInput from '../Validation/customInput';
 import crearFactura from '../../funciones/crearFactura';
 import obtenerArticulos from '../../funciones/obtenerArticulos';
-import CustomLista from '../Validation/customLista';
-import { Tooltip } from '@mui/material';
 
 function CrearFactura() {
     const [articulos, setArticulos] = useState([]);
