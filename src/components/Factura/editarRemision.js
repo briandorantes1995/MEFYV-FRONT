@@ -1,65 +1,77 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Field, FieldArray, Formik } from 'formik';
 import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
 import { facturaSchema } from '../Validation/Schema';
 import CustomInput from '../Validation/customInput';
-import crearFactura from '../../funciones/crearFactura';
 import obtenerArticulos from '../../funciones/obtenerArticulos';
+import buscarRemisiones from '../../funciones/buscarRemisiones';
+import actualizarRemision from "../../funciones/actualizarRemision";
 
-function CrearFactura() {
+function EditarRemision() {
     const [articulos, setArticulos] = useState([]);
+    const [remisionInicial, setRemisionInicial] = useState(null);
+    const { remisionId } = useParams();
     const navigate = useNavigate();
 
-    // Función para enviar el formulario
+    // Función para enviar el formulario de actualización
     const onSubmit = async (values, actions) => {
         try {
-            const factura = await crearFactura(
-                values.nombre,
-                values.domicilio,
-                values.rfc,
-                values.articulos
-            );
-            if (factura) {
-                console.log("Factura Creada con Exito");
-                navigate(`/remision/${factura.identificador}`);
+            const result = await actualizarRemision(remisionId, values);
+            if (result) {
+                console.log("Actualización exitosa:", result);
+                navigate(`/remision/${remisionId}`); // Redirigir solo después de la actualización exitosa
+            } else {
+                console.error('No se pudo actualizar la remisión.');
             }
             actions.resetForm();
         } catch (error) {
-            actions.resetForm();
-            console.error('Error durante la creación de la factura:', error);
+            console.error('Error durante la actualización de la remisión:', error);
         }
     };
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const responseData = await obtenerArticulos();
-                if (responseData && Array.isArray(responseData.articulos)) {
-                    setArticulos(responseData.articulos);
+                // Obtener la lista de artículos disponibles
+                const responseDataArticulos = await obtenerArticulos();
+                if (responseDataArticulos && Array.isArray(responseDataArticulos.articulos)) {
+                    setArticulos(responseDataArticulos.articulos);
                 } else {
-                    console.error('La respuesta no contiene un array de artículos:', responseData);
+                    console.error('La respuesta no contiene un array de artículos:', responseDataArticulos);
+                }
+
+                // Obtener la remisión usando `buscarRemisiones`
+                const responseDataRemision = await buscarRemisiones(remisionId);
+                if (responseDataRemision && responseDataRemision.remisiones.length > 0) {
+                    setRemisionInicial(responseDataRemision.remisiones[0]); // Asigna la primera remisión encontrada
+                } else {
+                    console.error('No se encontró la remisión con el ID:', remisionId);
                 }
             } catch (error) {
-                console.error('Error al obtener los artículos:', error);
+                console.error('Error al obtener los datos:', error);
             }
         }
         fetchData();
-    }, []);
+    }, [remisionId]);
+
+    if (!remisionInicial) {
+        return <div>Cargando remisión...</div>;
+    }
 
     return (
         <MDBContainer className="my-5">
             <MDBCard className="bg-cv">
                 <MDBCardBody className="d-flex flex-column">
                     <h3 className="fw-bold my-4 pb-3" style={{ letterSpacing: '1px' }}>
-                        Crear nueva Remisión
+                        Editar Remisión
                     </h3>
                     <Formik
                         initialValues={{
-                            nombre: '',
-                            domicilio: '',
-                            rfc: '',
-                            articulos: [{ articuloId: '', cantidad: 1 }] // Artículos iniciales
+                            nombre: remisionInicial.cliente || '',
+                            domicilio: remisionInicial.domicilio || '',
+                            rfc: remisionInicial.rfc || '',
+                            articulos: remisionInicial.detalles || [{ articuloId: '', cantidad: 1 }] // Usamos los detalles de la remisión como artículos
                         }}
                         validationSchema={facturaSchema}
                         onSubmit={onSubmit}
@@ -146,7 +158,7 @@ function CrearFactura() {
                                     disabled={isSubmitting}
                                     type="submit"
                                 >
-                                    Crear Remisión
+                                    Actualizar Remisión
                                 </MDBBtn>
                             </Form>
                         )}
@@ -157,4 +169,4 @@ function CrearFactura() {
     );
 }
 
-export default CrearFactura;
+export default EditarRemision;
