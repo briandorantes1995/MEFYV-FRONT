@@ -9,6 +9,7 @@ import Reportes from "./components/Factura/Reportes";
 import BusquedaRemisiones from "./components/Factura/busquedaRemisiones";
 import Remision from "./components/Factura/Remision";
 import EditarRemision from "./components/Factura/editarRemision";
+import CrearCliente from "./components/registro/cliente";
 import "./App.css"
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Route element={<MenuLayout/>}>
           <Route path="/" element={<Home/>}/>
           <Route path="/crearRemisiones" element={<Factura/>}/>
+            <Route path="/crearCliente" element={<CrearCliente/>}/>
           <Route path="/reportes" element={<Reportes/>}/>
             <Route path="/remision/:remisionId" element={<Remision/>}/>
             <Route path="/editar-remision/:remisionId" element={<EditarRemision/>}/>

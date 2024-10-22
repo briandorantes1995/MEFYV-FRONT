@@ -17,7 +17,7 @@ function generarPDF(remision) {
     const remisionYPosition = 50;
 
     // Detalles de la remisión
-    doc.text(`REMISION N° ${identificador}`, 20, remisionYPosition); // Cambiamos la posición Y a 50
+    doc.text(`REMISION N° ${identificador}`, 20, remisionYPosition);
     doc.text(`FECHA: ${fecha}`, 140, remisionYPosition);
 
     // Información del cliente
@@ -29,8 +29,8 @@ function generarPDF(remision) {
     const items = detalles.map(item => [
         item.cantidad,
         item.descripcion,
-        item.precio.toFixed(2),
-        (item.precio * item.cantidad).toFixed(2)
+        `$${item.precio.toFixed(2)}`,
+        `$${(item.precio * item.cantidad).toFixed(2)}`
     ]);
 
     doc.autoTable({
@@ -43,9 +43,9 @@ function generarPDF(remision) {
     doc.text(`CANTIDAD CON LETRA: TRES MIL SETECIENTOS CUARENTA PESOS 00/100 M.N.`, 20, doc.autoTable.previous.finalY + 10);
 
     // Totales
-    doc.text(`SUB-TOTAL: ${total.toFixed(2)}`, 150, doc.autoTable.previous.finalY + 20);
-    doc.text('IVA: 0.00', 150, doc.autoTable.previous.finalY + 30);
-    doc.text(`TOTAL: ${total.toFixed(2)}`, 150, doc.autoTable.previous.finalY + 40);
+    doc.text(`SUB-TOTAL: $${total.toFixed(2)}`, 150, doc.autoTable.previous.finalY + 20);
+    doc.text('IVA: $0.00', 150, doc.autoTable.previous.finalY + 30);
+    doc.text(`TOTAL: $${total.toFixed(2)}`, 150, doc.autoTable.previous.finalY + 40);
 
     // Abrir el PDF en una nueva ventana con la opción de imprimir
     const pdfBlob = doc.output('blob');
@@ -60,6 +60,7 @@ function generarPDF(remision) {
 }
 
 export default generarPDF;
+
 
 
 

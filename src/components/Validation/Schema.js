@@ -21,3 +21,13 @@ export const facturaSchema =Yup.object().shape({
     domicilio:Yup.string().required('Obligatorio'),
     rfc: Yup.string().required("Obligatorio"),
 });
+
+export const clienteSchema = Yup.object().shape({
+    nombre: Yup.string().required('El nombre es obligatorio'),
+    domicilio: Yup.string().required('El domicilio es obligatorio'),
+    rfc: Yup.string()
+        .required('El RFC es obligatorio')
+        .matches(/^[A-Z]{4}\d{6}[A-Z0-9]{3}$/, 'RFC no válido'),
+    telefono: Yup.string().matches(/^\d{10}$/, 'Teléfono no válido'),
+    email: Yup.string().email('Email no válido'),
+});

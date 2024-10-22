@@ -16,7 +16,7 @@ function Navbar() {
     // Función para cerrar sesión
     const cerrarSesion = () => {
         dispatch(destroy()); // Limpiar el estado de usuario
-        navigate("/login");  // Redirigir al login
+        navigate("/login");
     };
 
     return (
@@ -56,13 +56,20 @@ function Navbar() {
                         );
                     })}
 
-                    {/* Si el usuario está autenticado, mostrar la opción de Cerrar Sesión */}
+                    {/* Si el usuario está autenticado, mostrar la opción de Altas Clientes y Cerrar Sesión */}
                     {user && (
-                        <li className="nav-text">
-                            <Link to="#" onClick={cerrarSesion}>
-                                <span>Cerrar Sesión</span>
-                            </Link>
-                        </li>
+                        <>
+                            <li className="nav-text">
+                                <Link to="/crearCliente">  {/* Aquí redirigimos directamente al formulario de clientes */}
+                                    <span>Altas Clientes</span>
+                                </Link>
+                            </li>
+                            <li className="nav-text">
+                                <Link to="#" onClick={cerrarSesion}>
+                                    <span>Cerrar Sesión</span>
+                                </Link>
+                            </li>
+                        </>
                     )}
                 </ul>
             </nav>
@@ -71,5 +78,7 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
 
 

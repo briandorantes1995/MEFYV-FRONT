@@ -2,22 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Field, FieldArray, Formik } from 'formik';
 import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
-import { facturaSchema } from '../Validation/Schema';
-import CustomInput from '../Validation/customInput';
 import crearFactura from '../../funciones/crearFactura';
 import obtenerArticulos from '../../funciones/obtenerArticulos';
+import obtenerClientes from '../../funciones/obtenerClientes'; // Nueva función para obtener clientes
 
 function CrearFactura() {
     const [articulos, setArticulos] = useState([]);
+    const [clientes, setClientes] = useState([]);
     const navigate = useNavigate();
 
-    // Función para enviar el formulario
     const onSubmit = async (values, actions) => {
         try {
             const factura = await crearFactura(
-                values.nombre,
-                values.domicilio,
-                values.rfc,
+                values.clienteId, // Pasamos el clienteId
                 values.articulos
             );
             if (factura) {
@@ -34,14 +31,23 @@ function CrearFactura() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const responseData = await obtenerArticulos();
-                if (responseData && Array.isArray(responseData.articulos)) {
-                    setArticulos(responseData.articulos);
+                // Obtener los artículos
+                const responseDataArticulos = await obtenerArticulos();
+                if (responseDataArticulos && Array.isArray(responseDataArticulos.articulos)) {
+                    setArticulos(responseDataArticulos.articulos);
                 } else {
-                    console.error('La respuesta no contiene un array de artículos:', responseData);
+                    console.error('La respuesta no contiene un array de artículos:', responseDataArticulos);
+                }
+
+                // Obtener los clientes
+                const responseDataClientes = await obtenerClientes(); // Obtener lista de clientes
+                if (responseDataClientes && Array.isArray(responseDataClientes.clientes)) {
+                    setClientes(responseDataClientes.clientes);
+                } else {
+                    console.error('La respuesta no contiene un array de clientes:', responseDataClientes);
                 }
             } catch (error) {
-                console.error('Error al obtener los artículos:', error);
+                console.error('Error al obtener los datos:', error);
             }
         }
         fetchData();
@@ -56,34 +62,25 @@ function CrearFactura() {
                     </h3>
                     <Formik
                         initialValues={{
-                            nombre: '',
-                            domicilio: '',
-                            rfc: '',
+                            clienteId: '', // Cliente seleccionado
                             articulos: [{ articuloId: '', cantidad: 1 }] // Artículos iniciales
                         }}
-                        validationSchema={facturaSchema}
                         onSubmit={onSubmit}
                     >
                         {({ values, isSubmitting }) => (
                             <Form>
-                                <CustomInput
-                                    label="Nombre"
-                                    name="nombre"
-                                    type="input"
-                                    placeholder="Nombre de la Empresa/Persona"
-                                />
-                                <CustomInput
-                                    label="Domicilio"
-                                    name="domicilio"
-                                    type="input"
-                                    placeholder="Domicilio de la Empresa/Persona"
-                                />
-                                <CustomInput
-                                    label="RFC"
-                                    name="rfc"
-                                    type="input"
-                                    placeholder="RFC de la Empresa/Persona"
-                                />
+                                {/* Selección del cliente */}
+                                <div className="mb-3">
+                                    <label htmlFor="clienteId" className="form-label">Cliente</label>
+                                    <Field as="select" name="clienteId" className="form-select">
+                                        <option value="">Seleccione un cliente</option>
+                                        {clientes.map(cliente => (
+                                            <option key={cliente.id} value={cliente.id}>
+                                                {cliente.nombre}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                </div>
 
                                 {/* Sección de artículos dinámicos */}
                                 <FieldArray name="articulos">
@@ -158,3 +155,4 @@ function CrearFactura() {
 }
 
 export default CrearFactura;
+

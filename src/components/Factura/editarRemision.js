@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Field, FieldArray, Formik } from 'formik';
 import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
-import { facturaSchema } from '../Validation/Schema';
-import CustomInput from '../Validation/customInput';
 import obtenerArticulos from '../../funciones/obtenerArticulos';
+import obtenerClientes from '../../funciones/obtenerClientes'; // Nueva función para obtener clientes
 import buscarRemisiones from '../../funciones/buscarRemisiones';
 import actualizarRemision from "../../funciones/actualizarRemision";
 
 function EditarRemision() {
     const [articulos, setArticulos] = useState([]);
+    const [clientes, setClientes] = useState([]);
     const [remisionInicial, setRemisionInicial] = useState(null);
     const { remisionId } = useParams();
     const navigate = useNavigate();
@@ -17,7 +17,11 @@ function EditarRemision() {
     // Función para enviar el formulario de actualización
     const onSubmit = async (values, actions) => {
         try {
-            const result = await actualizarRemision(remisionId, values);
+            // Pasamos clienteId junto con los valores
+            const result = await actualizarRemision(remisionId, {
+                clienteId: values.clienteId, // Aseguramos de que clienteId se pase en el body
+                articulos: values.articulos // Los artículos también
+            });
             if (result) {
                 console.log("Actualización exitosa:", result);
                 navigate(`/remision/${remisionId}`); // Redirigir solo después de la actualización exitosa
@@ -39,6 +43,14 @@ function EditarRemision() {
                     setArticulos(responseDataArticulos.articulos);
                 } else {
                     console.error('La respuesta no contiene un array de artículos:', responseDataArticulos);
+                }
+
+                // Obtener la lista de clientes disponibles
+                const responseDataClientes = await obtenerClientes();
+                if (responseDataClientes && Array.isArray(responseDataClientes.clientes)) {
+                    setClientes(responseDataClientes.clientes);
+                } else {
+                    console.error('La respuesta no contiene un array de clientes:', responseDataClientes);
                 }
 
                 // Obtener la remisión usando `buscarRemisiones`
@@ -68,34 +80,25 @@ function EditarRemision() {
                     </h3>
                     <Formik
                         initialValues={{
-                            nombre: remisionInicial.cliente || '',
-                            domicilio: remisionInicial.domicilio || '',
-                            rfc: remisionInicial.rfc || '',
+                            clienteId: remisionInicial.cliente_id || '', // Cliente actual (como clienteId)
                             articulos: remisionInicial.detalles || [{ articuloId: '', cantidad: 1 }] // Usamos los detalles de la remisión como artículos
                         }}
-                        validationSchema={facturaSchema}
                         onSubmit={onSubmit}
                     >
                         {({ values, isSubmitting }) => (
                             <Form>
-                                <CustomInput
-                                    label="Nombre"
-                                    name="nombre"
-                                    type="input"
-                                    placeholder="Nombre de la Empresa/Persona"
-                                />
-                                <CustomInput
-                                    label="Domicilio"
-                                    name="domicilio"
-                                    type="input"
-                                    placeholder="Domicilio de la Empresa/Persona"
-                                />
-                                <CustomInput
-                                    label="RFC"
-                                    name="rfc"
-                                    type="input"
-                                    placeholder="RFC de la Empresa/Persona"
-                                />
+                                {/* Selección del cliente */}
+                                <div className="mb-3">
+                                    <label htmlFor="clienteId" className="form-label">Cliente</label>
+                                    <Field as="select" name="clienteId" className="form-select">
+                                        <option value="">Seleccione un cliente</option>
+                                        {clientes.map(cliente => (
+                                            <option key={cliente.id} value={cliente.id}>
+                                                {cliente.nombre}
+                                            </option>
+                                        ))}
+                                    </Field>
+                                </div>
 
                                 {/* Sección de artículos dinámicos */}
                                 <FieldArray name="articulos">
@@ -170,3 +173,5 @@ function EditarRemision() {
 }
 
 export default EditarRemision;
+
+
