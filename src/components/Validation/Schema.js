@@ -24,10 +24,25 @@ export const facturaSchema =Yup.object().shape({
 
 export const clienteSchema = Yup.object().shape({
     nombre: Yup.string().required('El nombre es obligatorio'),
-    domicilio: Yup.string().required('El domicilio es obligatorio'),
+
+    // Campos de dirección específicos
+    estado: Yup.string().required('El estado es obligatorio'),
+    municipio: Yup.string().required('El municipio es obligatorio'),
+    colonia: Yup.string().required('La colonia es obligatoria'),
+    codigoPostal: Yup.string()
+        .required('El código postal es obligatorio')
+        .matches(/^\d{5}$/, 'Código postal no válido'),
+    calle: Yup.string().required('La calle es obligatoria'),
+
     rfc: Yup.string()
         .required('El RFC es obligatorio')
         .matches(/^[A-Z]{4}\d{6}[A-Z0-9]{3}$/, 'RFC no válido'),
-    telefono: Yup.string().matches(/^\d{10}$/, 'Teléfono no válido'),
-    email: Yup.string().email('Email no válido'),
+
+    telefono: Yup.string()
+        .matches(/^\d{10}$/, 'Teléfono no válido')
+        .required('El teléfono es obligatorio'),
+
+    email: Yup.string()
+        .email('Email no válido')
+        .required('El email es obligatorio')
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Form, Formik} from 'formik';
+import { Form, Formik } from 'formik';
 import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
 import CustomInput from '../Validation/customInput';
 import crearCliente from '../../funciones/crearCliente';
@@ -12,7 +12,17 @@ function CrearCliente() {
     // Función para enviar el formulario
     const onSubmit = async (values, actions) => {
         try {
-            const cliente = await crearCliente(values.nombre, values.domicilio, values.rfc, values.telefono, values.email);
+            // Concatenar los valores de domicilio en el orden especificado
+            const domicilioConcatenado = `${values.estado}, ${values.municipio}, ${values.colonia}, ${values.codigoPostal}, ${values.calle}`;
+
+            const cliente = await crearCliente(
+                values.nombre,
+                domicilioConcatenado,  // Usar el domicilio concatenado
+                values.rfc,
+                values.telefono,
+                values.email
+            );
+
             if (cliente) {
                 console.log("Cliente creado con éxito");
                 navigate('/');
@@ -34,7 +44,11 @@ function CrearCliente() {
                     <Formik
                         initialValues={{
                             nombre: '',
-                            domicilio: '',
+                            estado: '',
+                            municipio: '',
+                            colonia: '',
+                            codigoPostal: '',
+                            calle: '',
                             rfc: '',
                             telefono: '',
                             email: ''
@@ -51,10 +65,34 @@ function CrearCliente() {
                                     placeholder="Nombre del Cliente"
                                 />
                                 <CustomInput
-                                    label="Domicilio"
-                                    name="domicilio"
+                                    label="Estado"
+                                    name="estado"
                                     type="input"
-                                    placeholder="Domicilio del Cliente"
+                                    placeholder="Estado"
+                                />
+                                <CustomInput
+                                    label="Municipio"
+                                    name="municipio"
+                                    type="input"
+                                    placeholder="Municipio"
+                                />
+                                <CustomInput
+                                    label="Colonia"
+                                    name="colonia"
+                                    type="input"
+                                    placeholder="Colonia"
+                                />
+                                <CustomInput
+                                    label="Código Postal"
+                                    name="codigoPostal"
+                                    type="input"
+                                    placeholder="Código Postal"
+                                />
+                                <CustomInput
+                                    label="Calle"
+                                    name="calle"
+                                    type="input"
+                                    placeholder="Calle"
                                 />
                                 <CustomInput
                                     label="RFC"
@@ -94,4 +132,5 @@ function CrearCliente() {
 }
 
 export default CrearCliente;
+
 

@@ -31,10 +31,6 @@ function Registro() {
             <MDBCard>
                 <MDBRow className='g-0'>
                     <MDBCol md='6'>
-                        <MDBCardImage src='https://i.pinimg.com/564x/fc/2c/4f/fc2c4ff707aa65b2ab968d8de9f0de48.jpg' alt="login form" className='rounded-start w-100 m-3'/>
-                    </MDBCol>
-
-                    <MDBCol md='6'>
                         <MDBCardBody className='d-flex flex-column'>
                             <div className='d-flex flex-row mt-2 jc-center'>
                                 <MDBIcon fas icon="cubes fa-3x me-3" style={{ color: '#ff6219' }}/>

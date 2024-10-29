@@ -35,10 +35,6 @@ function Login() {
                 <MDBRow className='g-0'>
 
                     <MDBCol md='6'>
-                        <MDBCardImage src='https://i.pinimg.com/564x/e8/11/a7/e811a7b14ec7b2dc44a46fe7667e704e.jpg' alt="login form" className='rounded-start w-100'/>
-                    </MDBCol>
-
-                    <MDBCol md='6'>
                         <MDBCardBody className='d-flex flex-column'>
 
                             <div className='d-flex flex-row mt-3 jc-center'>
