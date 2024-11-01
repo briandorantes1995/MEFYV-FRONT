@@ -4,12 +4,14 @@ import { Form, Field, FieldArray, Formik } from 'formik';
 import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
 import crearFactura from '../../funciones/crearFactura';
 import obtenerArticulos from '../../funciones/obtenerArticulos';
-import obtenerClientes from '../../funciones/obtenerClientes'; // Nueva función para obtener clientes
+import obtenerClientes from '../../funciones/obtenerClientes';
+import CustomizedSnackbars from "../ui/snackBar"; // Nueva función para obtener clientes
 
 function CrearFactura() {
     const [articulos, setArticulos] = useState([]);
     const [clientes, setClientes] = useState([]);
     const navigate = useNavigate();
+    const [cuentaMessage, setCuentaMessage] = useState();
 
     const onSubmit = async (values, actions) => {
         try {
@@ -18,8 +20,10 @@ function CrearFactura() {
                 values.articulos
             );
             if (factura) {
-                console.log("Factura Creada con Exito");
-                navigate(`/remision/${factura.identificador}`);
+                setCuentaMessage(factura.message);
+                setTimeout(() => {
+                    navigate(`/remision/${factura.identificador}`);
+                }, 3000);
             }
             actions.resetForm();
         } catch (error) {
@@ -54,6 +58,8 @@ function CrearFactura() {
     }, []);
 
     return (
+        <div className="fill-window">
+            <CustomizedSnackbars message={cuentaMessage} level={"success"} vertical={'bottom'} horizontal={'center'} />
         <MDBContainer className="my-5">
             <MDBCard className="bg-cv">
                 <MDBCardBody className="d-flex flex-column">
@@ -151,6 +157,7 @@ function CrearFactura() {
                 </MDBCardBody>
             </MDBCard>
         </MDBContainer>
+            </div>
     );
 }
 

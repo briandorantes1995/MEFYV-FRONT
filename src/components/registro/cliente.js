@@ -1,40 +1,50 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Formik } from 'formik';
-import { MDBBtn, MDBContainer, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBContainer, MDBCard, MDBCardBody, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import CustomInput from '../Validation/customInput';
 import crearCliente from '../../funciones/crearCliente';
 import { clienteSchema } from '../Validation/Schema';
+import CustomizedSnackbars from "../ui/snackBar";
 
 function CrearCliente() {
     const navigate = useNavigate();
+    const [cuentaMessage, setCuentaMessage] = useState();
 
-    // Función para enviar el formulario
     const onSubmit = async (values, actions) => {
         try {
-            // Concatenar los valores de domicilio en el orden especificado
             const domicilioConcatenado = `${values.estado}, ${values.municipio}, ${values.colonia}, ${values.codigoPostal}, ${values.calle}`;
 
+            // Llamada a la función `crearCliente`
             const cliente = await crearCliente(
                 values.nombre,
-                domicilioConcatenado,  // Usar el domicilio concatenado
+                domicilioConcatenado,
                 values.rfc,
-                values.telefono,
+                `${values.lada} ${values.telefono}`,
                 values.email
             );
 
+            // Muestra el mensaje y navega en caso de éxito
             if (cliente) {
-                console.log("Cliente creado con éxito");
-                navigate('/');
+                console.log(cliente);
+                setCuentaMessage(cliente.message);
+                setTimeout(() => {
+                    navigate('/');
+                }, 3000);
             }
             actions.resetForm();
         } catch (error) {
-            actions.resetForm();
             console.error('Error durante la creación del cliente:', error);
+            // Muestra el mensaje de error en la interfaz
+            setCuentaMessage(error.message || 'Error desconocido al crear cliente');
+        } finally {
+            actions.setSubmitting(false);
         }
     };
 
     return (
+        <div className="fill-window">
+            <CustomizedSnackbars message={cuentaMessage} level={"success"} vertical={'bottom'} horizontal={'center'} />
         <MDBContainer className="my-5">
             <MDBCard className="bg-cv">
                 <MDBCardBody className="d-flex flex-column">
@@ -50,7 +60,8 @@ function CrearCliente() {
                             codigoPostal: '',
                             calle: '',
                             rfc: '',
-                            telefono: '',
+                            lada: '',        // Campo de Lada
+                            telefono: '',    // Campo de Teléfono
                             email: ''
                         }}
                         validationSchema={clienteSchema} // Validación del formulario
@@ -100,12 +111,27 @@ function CrearCliente() {
                                     type="input"
                                     placeholder="RFC del Cliente"
                                 />
-                                <CustomInput
-                                    label="Teléfono"
-                                    name="telefono"
-                                    type="input"
-                                    placeholder="Teléfono del Cliente"
-                                />
+
+                                {/* Fila con Lada y Teléfono */}
+                                <MDBRow>
+                                    <MDBCol md="6">
+                                        <CustomInput
+                                            label="Lada"
+                                            name="lada"
+                                            type="input"
+                                            placeholder="Lada"
+                                        />
+                                    </MDBCol>
+                                    <MDBCol md="6">
+                                        <CustomInput
+                                            label="Teléfono"
+                                            name="telefono"
+                                            type="input"
+                                            placeholder="Teléfono del Cliente"
+                                        />
+                                    </MDBCol>
+                                </MDBRow>
+
                                 <CustomInput
                                     label="Email"
                                     name="email"
@@ -128,9 +154,11 @@ function CrearCliente() {
                 </MDBCardBody>
             </MDBCard>
         </MDBContainer>
+        </div>
     );
 }
 
 export default CrearCliente;
+
 
 
